@@ -187,7 +187,7 @@ class Measurer:
         self.end_compute_network_traffic()
         self.compute_data_size_in_grid_points(shape)
         self.compute_energy_consumed()
-        self.end_compute_data_size()
+        self.end_compute_data_size(data_path)
         self.total_main_memory_available()
         self.end_compute_data_size(data_path)
         self.cpu_gpu_description()
