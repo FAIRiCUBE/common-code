@@ -4,7 +4,7 @@ from types import ModuleType
 
 def your_function():
     # Path where the data are stored (the use of the disk in this path is measured).
-    # Leave '/' to measure the entire disk.
+    # Use '/' to measure the entire disk.
     data_path = '/'
     measurer = Measurer()
     tracker = measurer.start(data_path=data_path)
