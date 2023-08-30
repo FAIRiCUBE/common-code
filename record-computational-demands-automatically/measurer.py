@@ -174,10 +174,15 @@ class Measurer:
     # start
     def start(self, data_path='/'):
         self.start_compute_wall_time()
+        print("Started compute wall time")
         self.start_compute_main_memory_consumed()
+        print("Started compute main memory consumed")
         self.start_compute_network_traffic()
+        print("Started compute network traffic")
         tracker = self.start_compute_co2_emissions()
+        print("Started compute CO2 emissions")
         self.start_compute_data_size(data_path)
+        print("Started compute data size")
         return tracker
 
     # end
@@ -187,7 +192,6 @@ class Measurer:
         self.end_compute_network_traffic()
         self.compute_data_size_in_grid_points(shape)
         self.compute_energy_consumed()
-        self.end_compute_data_size()
         self.total_main_memory_available()
         self.end_compute_data_size(data_path)
         self.cpu_gpu_description()
