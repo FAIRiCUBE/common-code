@@ -17,6 +17,6 @@ def your_function():
 
     measurer.end(tracker=tracker,
                  shape=shape,
-                 libraries=[k for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
+                 libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
                  data_path=data_path,
                  csv_file='benchmarks.csv')
