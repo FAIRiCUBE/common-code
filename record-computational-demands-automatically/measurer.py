@@ -172,8 +172,10 @@ class Measurer:
         return csv
 
     # start
-    def start(self, data_path='/'):
+    def start(self, data_path='/', logger=None):
         self.start_compute_wall_time()
+        if(logger!=None):
+            logger.info("Started computational costs meter: wall time, memory consumed, network traffic, CO2 emissions, data size")
         self.start_compute_main_memory_consumed()
         self.start_compute_network_traffic()
         tracker = self.start_compute_co2_emissions()
@@ -181,7 +183,7 @@ class Measurer:
         return tracker
 
     # end
-    def end(self, tracker, shape, libraries, csv_file, data_path='/'):
+    def end(self, tracker, shape, libraries, csv_file, data_path='/', logger=None):
         self.end_compute_main_memory_consumed()
         self.end_compute_co2_emissions(tracker)
         self.end_compute_network_traffic()
@@ -193,4 +195,6 @@ class Measurer:
         self.end_compute_data_size(data_path)
         self.end_compute_wall_time()
         csv = self.write_out(csv_file)
+        if(logger!=None):
+            logger.info("Stopped computational costs meter. Results saved at"+csv_file)
         print(csv)
