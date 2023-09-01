@@ -141,12 +141,29 @@ class Measurer:
         old_value = self.network_traffic
         self.network_traffic = new_value - old_value
 
-    def get_essential_libraries(self, libraries):
-        lib = ''
-        for i in libraries:
-            lib = lib + i + "\n"
-        self.essential_libraries = lib
-        return lib
+    def get_essential_libraries(self, libraries, program_path):
+        f = open(program_path, 'r')
+        lib = libraries
+        while True:
+            code_line = f.readline()
+            if not code_line:
+                break
+            if code_line[0] == '#':
+                continue
+            if not (code_line[:5] == 'from ' and code_line.__contains__('import')):
+                continue
+            code_line = code_line.split(' ')[1]
+            if code_line == 'types' or code_line == 'measurer':
+                continue
+            if code_line.__contains__('.'):
+                code_line = code_line.split('.')[0]
+            if code_line not in lib:
+                lib.append(code_line)
+        lib_str = ''
+        for i in lib:
+            lib_str = lib_str + i + "\n"
+        self.essential_libraries = lib_str
+        return lib_str
 
     def write_out(self, csv_file):
         csv = pd.DataFrame(columns=['Measure', 'Value'])
@@ -183,7 +200,7 @@ class Measurer:
         return tracker
 
     # end
-    def end(self, tracker, shape, libraries, csv_file, data_path='/', logger=None):
+    def end(self, tracker, shape, libraries, csv_file, data_path='/', , program_path=__file__, logger=None):
         self.end_compute_main_memory_consumed()
         self.end_compute_co2_emissions(tracker)
         self.end_compute_network_traffic()
@@ -191,7 +208,7 @@ class Measurer:
         self.compute_energy_consumed()
         self.total_main_memory_available()
         self.cpu_gpu_description()
-        self.get_essential_libraries(libraries)
+        self.get_essential_libraries(libraries, program_path)
         self.end_compute_data_size(data_path)
         self.end_compute_wall_time()
         csv = self.write_out(csv_file)
