@@ -15,6 +15,7 @@ def your_function():
         # write here your code...
     '''
 
+    # it is very important to use program_path = __file__
     measurer.end(tracker=tracker,
                  shape=shape,
                  libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
