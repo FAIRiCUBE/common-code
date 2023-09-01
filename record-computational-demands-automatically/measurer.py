@@ -200,7 +200,7 @@ class Measurer:
         return tracker
 
     # end
-    def end(self, tracker, shape, libraries, csv_file, data_path='/', , program_path=__file__, logger=None):
+    def end(self, tracker, shape, libraries, csv_file, data_path='/', program_path=__file__, logger=None):
         self.end_compute_main_memory_consumed()
         self.end_compute_co2_emissions(tracker)
         self.end_compute_network_traffic()
