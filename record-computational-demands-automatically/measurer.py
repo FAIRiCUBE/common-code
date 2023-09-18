@@ -50,12 +50,28 @@ class Measurer:
         self.wall_time = end - t
         return end
 
-    def start_compute_data_size(self, data_path):
-        self.data_size = psutil.disk_usage(data_path).used
-
-    def end_compute_data_size(self, data_path):
+    def start_compute_data_size(self, data_path, aws_s3, aws_session):
+        if aws_s3:
+            s3 = aws_session.resource('s3')
+            bucket = s3.Bucket(data_path)
+            size_in_bytes = 0
+            for key in bucket.objects.all():
+                size_in_bytes += key.size
+            self.data_size = size_in_bytes
+        else:
+            self.data_size = psutil.disk_usage(data_path).used
+            
+    def end_compute_data_size(self, data_path, aws_s3, aws_session):
         start = self.data_size
-        end = psutil.disk_usage(data_path).used
+        if aws_s3:
+            s3 = aws_session.resource('s3')
+            bucket = s3.Bucket(data_path)
+            size_in_bytes = 0
+            for key in bucket.objects.all():
+                size_in_bytes += key.size
+            end = size_in_bytes
+        else:
+            end = psutil.disk_usage(data_path).used
         end = end - start
         self.data_size = end
         return end
@@ -189,18 +205,18 @@ class Measurer:
         return csv
 
     # start
-    def start(self, data_path='/', logger=None):
+    def start(self, data_path='/', logger=None, aws_s3=False, aws_session=None):
         self.start_compute_wall_time()
         if(logger!=None):
             logger.info("Started computational costs meter: wall time, memory consumed, network traffic, CO2 emissions, data size")
         self.start_compute_main_memory_consumed()
         self.start_compute_network_traffic()
         tracker = self.start_compute_co2_emissions()
-        self.start_compute_data_size(data_path)
+        self.start_compute_data_size(data_path, aws_s3, aws_session)
         return tracker
 
     # end
-    def end(self, tracker, shape, libraries, csv_file, data_path='/', program_path=__file__, logger=None):
+    def end(self, tracker, shape, libraries, csv_file, data_path='/', program_path=__file__, logger=None, aws_s3=False, aws_session=None):
         self.end_compute_main_memory_consumed()
         self.end_compute_co2_emissions(tracker)
         self.end_compute_network_traffic()
@@ -209,7 +225,7 @@ class Measurer:
         self.total_main_memory_available()
         self.cpu_gpu_description()
         self.get_essential_libraries(libraries, program_path)
-        self.end_compute_data_size(data_path)
+        self.end_compute_data_size(data_path, aws_s3, aws_session)
         self.end_compute_wall_time()
         csv = self.write_out(csv_file)
         if(logger!=None):
