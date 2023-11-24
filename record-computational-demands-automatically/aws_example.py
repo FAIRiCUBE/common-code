@@ -27,6 +27,7 @@ def your_function():
                  libraries=[v.__name__ for k, v in globals().items() if type(v) is ModuleType and not k.startswith('__')],
                  data_path=data_path,
                  program_path=__file__,
+                 variables=locals(),
                  csv_file='benchmarks.csv',
                  aws_s3=True,
                  aws_session=aws_session)
