@@ -220,7 +220,7 @@ class Measurer:
         largest_array_shape = ''
         for key in variables:
             variables_sum = variables_sum + sys.getsizeof(variables[key])
-            if isinstance(variables[key], np.ndarray):
+            if isinstance(variables[key], np.ndarray) or isinstance(variables[key], pd.DataFrame):
                 if variables[key].size > largest_array_size:
                     largest_array_size = variables[key].size
                     largest_array_shape = str(variables[key].shape).replace('(', '[').replace(')', ']')
