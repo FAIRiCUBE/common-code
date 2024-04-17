@@ -117,8 +117,8 @@ class Measurer:
             description = description + 'CUDNN VERSION:', torch.backends.cudnn.version() + "\n"
             description = description + 'Number CUDA Devices:', torch.cuda.device_count() + "\n"
             description = description + 'CUDA Device Name:', torch.cuda.get_device_name(0) + "\n"
-            description = description + 'CUDA Device Total Memory [GB]:', torch.cuda.get_device_properties(
-                0).total_memory / 1e9 + "\n"
+            description = description + 'CUDA Device Total Memory [MB]:', torch.cuda.get_device_properties(
+                0).total_memory / 1e6 + "\n"
         else:
             description = description + 'No GPU available\n'
         self.cpu_gpu_description = description
@@ -133,8 +133,9 @@ class Measurer:
 
     def end_compute_co2_emissions(self, tracker):
         emissions = tracker.stop()
-        self.co2_consumed = emissions
-        return emissions
+        g_emissions = 1000*emissions
+        self.co2_consumed = g_emissions
+        return g_emissions
 
     def compute_data_size_in_grid_points(self, shape):
         if len(shape) == 0:
@@ -147,9 +148,10 @@ class Measurer:
     def compute_energy_consumed(self):
         emissions = pd.read_csv('emissions.csv')
         kw = emissions['energy_consumed'].iloc[-1]
-        self.max_energy_consumed = kw
+        w = 1000*kw
+        self.max_energy_consumed = w
         os.remove('emissions.csv')
-        return kw
+        return w
 
     def start_compute_network_traffic(self):
         sent = psutil.net_io_counters().bytes_sent
@@ -194,16 +196,16 @@ class Measurer:
                              'Value': self.largest_allocated_array_in_grid_points}
         csv.loc[len(csv)] = {'Measure': 'Data size (MB)',
                              'Value': str(utils.bytes_to(self.data_size, 'm'))}
-        csv.loc[len(csv)] = {'Measure': 'Main memory available (GB)',
-                             'Value': str(utils.bytes_to(self.main_memory_available, 'g'))}
-        csv.loc[len(csv)] = {'Measure': 'Main memory consumed (GB)',
-                             'Value': str(utils.bytes_to(self.main_memory_consumed, 'g'))}
-        csv.loc[len(csv)] = {'Measure': 'Sum of allocated variable sizes (GB)',
-                             'Value': str(utils.bytes_to(self.sum_of_allocated_variable_sizes, 'g'))}
+        csv.loc[len(csv)] = {'Measure': 'Main memory available (MB)',
+                             'Value': str(utils.bytes_to(self.main_memory_available, 'm'))}
+        csv.loc[len(csv)] = {'Measure': 'Main memory consumed (MB)',
+                             'Value': str(utils.bytes_to(self.main_memory_consumed, 'm'))}
+        csv.loc[len(csv)] = {'Measure': 'Sum of allocated variable sizes (MB)',
+                             'Value': str(utils.bytes_to(self.sum_of_allocated_variable_sizes, 'm'))}
         csv.loc[len(csv)] = {'Measure': 'Description of CPU/GPU', 'Value': self.cpu_gpu_description}
         csv.loc[len(csv)] = {'Measure': 'Wall time in seconds', 'Value': self.wall_time}
-        csv.loc[len(csv)] = {'Measure': 'Energy consumed (kw)', 'Value': self.max_energy_consumed}
-        csv.loc[len(csv)] = {'Measure': 'CO₂-equivalents [CO₂eq] (kg)', 'Value': self.co2_consumed}
+        csv.loc[len(csv)] = {'Measure': 'Energy consumed (W)', 'Value': self.max_energy_consumed}
+        csv.loc[len(csv)] = {'Measure': 'CO₂-equivalents [CO₂eq] (g)', 'Value': self.co2_consumed}
         csv.loc[len(csv)] = {'Measure': 'Network traffic (MB)',
                              'Value': str(utils.bytes_to(self.network_traffic, 'm'))}
         # csv.loc[len(csv)] = {'Measure': 'Storage cost', 'Value': self.storage_cost}
