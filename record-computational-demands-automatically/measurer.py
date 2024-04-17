@@ -14,7 +14,7 @@ import numpy as np
 # noinspection PyAttributeOutsideInit
 class Measurer:
 
-    def __int__(self):
+    def __init__(self):
         # DONE
         self.data_size_in_grid_points = ''
         # TO DO
