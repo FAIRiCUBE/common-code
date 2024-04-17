@@ -79,6 +79,7 @@ class Measurer:
         else:
             end = psutil.disk_usage(data_path).used
         end = end - start
+        end = round(end, 2)
         self.data_size = end
         return end
 
@@ -89,11 +90,13 @@ class Measurer:
     def end_compute_main_memory_consumed(self):
         used = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
+        used = round(used, 2)
         self.main_memory_consumed = used
         return used
 
     def total_main_memory_available(self):
         total = psutil.virtual_memory().total
+        total = round(total, 2)
         self.main_memory_available = total
         return total
 
@@ -117,8 +120,8 @@ class Measurer:
             description = description + 'CUDNN VERSION:', torch.backends.cudnn.version() + "\n"
             description = description + 'Number CUDA Devices:', torch.cuda.device_count() + "\n"
             description = description + 'CUDA Device Name:', torch.cuda.get_device_name(0) + "\n"
-            description = description + 'CUDA Device Total Memory [MB]:', torch.cuda.get_device_properties(
-                0).total_memory / 1e6 + "\n"
+            description = description + 'CUDA Device Total Memory [MB]:', round(torch.cuda.get_device_properties(
+                0).total_memory / 1e6, 2) + "\n"
         else:
             description = description + 'No GPU available\n'
         self.cpu_gpu_description = description
@@ -134,6 +137,7 @@ class Measurer:
     def end_compute_co2_emissions(self, tracker):
         emissions = tracker.stop()
         g_emissions = 1000*emissions
+        g_emissions = round(g_emissions, 2)
         self.co2_consumed = g_emissions
         return g_emissions
 
@@ -149,6 +153,7 @@ class Measurer:
         emissions = pd.read_csv('emissions.csv')
         kw = emissions['energy_consumed'].iloc[-1]
         w = 1000*kw
+        w = round(w, 2)
         self.max_energy_consumed = w
         os.remove('emissions.csv')
         return w
@@ -163,7 +168,7 @@ class Measurer:
         recv = psutil.net_io_counters().bytes_recv
         new_value = sent + recv
         old_value = self.network_traffic
-        self.network_traffic = new_value - old_value
+        self.network_traffic = round(new_value - old_value, 2)
 
     def get_essential_libraries(self, libraries, program_path):
         f = open(program_path, 'r')
