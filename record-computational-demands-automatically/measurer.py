@@ -263,5 +263,5 @@ class Measurer:
         self.compute_variable_sizes(variables)
         csv = self.write_out(csv_file)
         if logger is not None:
-            logger.info("Stopped computational costs meter. Results saved at" + csv_file)
+            logger.info("Stopped computational costs meter. Results saved at" , csv_file)
         print(csv)
