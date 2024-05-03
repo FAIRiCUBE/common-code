@@ -1,0 +1,26 @@
+Measure,Value
+Data size in grid points ,50000x32x32x3
+Largest allocated array in grid points ,"[50000, 32, 32, 3]"
+Data size (MB),0.07
+Data read (MB),0.12
+Data written (MB),2.24
+Main memory available (MB),31401.47
+Main memory consumed (MB),2581.38
+Sum of allocated variable sizes (MB),1406.26
+Description of CPU/GPU,"Machine type: x86_64
+Processor type: x86_64
+Number of physical cores: 4
+Number of logical cores: 8
+CPU frequency: 3.0432 GHz
+No GPU available
+"
+Wall time (s),428.51
+Energy consumed (W),6.39
+CO₂-equivalents [CO₂eq] (g),2.46
+Network traffic (MB),22.8
+Programming language,Python
+Essential libraries,"time
+os
+tensorflow
+numpy
+"
