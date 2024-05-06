@@ -14,7 +14,6 @@ def main():
     tracker = measurer.start(data_path=data_path)
 
 
-    # get data
     data = keras.datasets.cifar10
     (train_images, train_labels), (test_images, test_labels) = data.load_data()
     labels = len(np.unique(train_labels))
