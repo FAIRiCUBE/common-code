@@ -144,11 +144,11 @@ class Measurer:
         # GPU
         use_cuda = torch.cuda.is_available()
         if use_cuda:
-            description = description + 'CUDNN VERSION:', torch.backends.cudnn.version() + "\n"
-            description = description + 'Number CUDA Devices:', torch.cuda.device_count() + "\n"
-            description = description + 'CUDA Device Name:', torch.cuda.get_device_name(0) + "\n"
-            description = description + 'CUDA Device Total Memory [MB]:', round(torch.cuda.get_device_properties(
-                0).total_memory / 1e6, 2) + "\n"
+            description = description + 'CUDNN VERSION:' +  str(torch.backends.cudnn.version()) + "\n"
+            description = description + 'Number CUDA Devices:' + str(torch.cuda.device_count()) + "\n"
+            description = description + 'CUDA Device Name:' + str(torch.cuda.get_device_name(0)) + "\n"
+            description = description + 'CUDA Device Total Memory [MB]:' + str(round(torch.cuda.get_device_properties(
+                0).total_memory / 1e6, 2)) + "\n"
         else:
             description = description + 'No GPU available\n'
         self.cpu_gpu_description = description
