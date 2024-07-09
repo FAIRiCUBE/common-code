@@ -2,6 +2,7 @@ from measurer import Measurer
 from types import ModuleType
 import time
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
@@ -47,6 +48,8 @@ def main():
     test_loss, test_acc = model.evaluate(test_images, test_labels)
     print('\n\nTest accuracy:', test_acc)
 
+    model_path = "./resnet.keras"
+    model.save(model_path)
 
     # END
     measurer.end(
