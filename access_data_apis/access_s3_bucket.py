@@ -21,7 +21,7 @@ def config(filename: str, section: str='s3') -> dict:
     return section_dict
 
 
-def access_data_s3_bucket(filename: str) -> xr.DataArray:
+def xarray_from_s3_bucket(filename: str) -> xr.DataArray:
     """ Access a data cube from s3 bucket using xarray. Tries to use credentials stored in environment variables or in local config file """
     if (os.environ.get('S3_FAIRICUBE_STORAGE_BUCKET') is None):
         print('environment variables not set, trying with local config file')
@@ -47,5 +47,5 @@ def access_data_s3_bucket(filename: str) -> xr.DataArray:
 
 if __name__ == "__main__":
     filename = 'vienna_data/100m/TX_yearly_avg_2020-2024_epsg31256_100m_regridded.zarr'
-    ds = access_data_s3_bucket(filename)
+    ds = xarray_from_s3_bucket(filename)
     print(ds)

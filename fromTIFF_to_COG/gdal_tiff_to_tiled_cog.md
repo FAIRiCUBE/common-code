@@ -1,5 +1,7 @@
 # GDAL command for splitting/tiling raster file into tiles and converting to COG
 
+Use this to split large raster files in tiles before registering the data to SentinelHub.
+
 ## Notes
 
 gdal_retile.py is a Python script, and will only work if GDAL was built with Python support.
