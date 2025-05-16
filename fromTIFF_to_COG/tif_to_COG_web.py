@@ -82,12 +82,12 @@ def convert_to_cog(input_tiff, output_cog=None, nodata_value_arg=None):
     nodata_value = ds.GetRasterBand(1).GetNoDataValue()
     if nodata_value is None and nodata_value_arg is None:
         print('Warning! NODATA value not found in input GeoTIff, and none provided, using default -9999')
-        nodata_value = "-9999"
+        nodata_value = -9999.25
     elif nodata_value_arg is not None:
         nodata_value = nodata_value_arg
     else:
         print("Using NODATA value from input GeoTIFF: ", nodata_value)
-        nodata_value = str(nodata_value)
+        nodata_value = nodata_value
 
     try:
 
@@ -97,17 +97,24 @@ def convert_to_cog(input_tiff, output_cog=None, nodata_value_arg=None):
             "gdal_translate",
             "-of", "COG",
             "-co", "COMPRESS=LZW",
-            "-co", "STATISTICS=YES",
+            
             "-co", "TILING_SCHEME=GoogleMapsCompatible",
             "-co", "ADD_ALPHA=NO",
-            "-a_nodata", nodata_value,
-            "-scale", "0 1 0 1",
+            "-a_nodata", str(nodata_value),
+            "-scale", "0", "1", "0", "1",
             input_tiff,
             output_cog
         ]
 
-        subprocess.run(gdal_translate_cmd, check=True)
 
+        # the following argument is removed as it throws a "Warning 6: driver COG does not support creation option STATISTICS"
+        #  "-co", "STATISTICS=YES",
+        
+        # subprocess.run(gdal_translate_cmd, check=True)
+        # collecting and printing detailed error information 
+        result = subprocess.run(gdal_translate_cmd, check=True, capture_output=True, text=True)
+        print(result.stdout)
+        print(result.stderr)
         
         # Step 2: If PAM file is not created in the previous step, force creation with gdalinfo --stats
         # Get the base name without extension for metadata file
